@@ -12,15 +12,6 @@ score1El.textContent = 0;
 const currentScore0El = document.querySelector("#current--0");
 const currentScore1El = document.querySelector("#current--1");
 
-/* create variables to hold the current score */
-let currentScore = 0;
-
-/* get the current role default player  */
-let activePlayer = 0;
-
-/* the place to hold score if switch player */
-let score = [0, 0]; //score player 1, player 2
-
 /* get all elements button */
 const btnRoll = document.querySelector(".btn--roll"); // button roll
 const btnHold = document.querySelector(".btn--hold"); // button hold
@@ -36,6 +27,33 @@ const player1El = document.querySelector(".player--1");
 
 // when wins, player cannot click button anymore accept new games
 let playing = true;
+/* create variables to hold the current score */
+let score, currentScore, activePlayer;
+const init = function () {
+  /* the place to hold score if switch player */
+  score = [0, 0]; //score player 1, player 2
+  currentScore = 0; /* create variables to hold the current score */
+  playing = true; // when wins, player cannot click button anymore accept new games
+  activePlayer = 0; /* get the current role default player  */
+
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  currentScore0El.textContent = score[0];
+  currentScore1El.textContent = score[1];
+
+  player0El.classList.add("player--active");
+  player1El.classList.remove("player--active");
+  document.querySelector(`#current--${activePlayer}`).textContent =
+    currentScore;
+
+  // remove player winner style (both => player 1 and 2) because we dont know at the ends, who will wins
+  player0El.classList.remove("player--winner");
+  player1El.classList.remove("player--winner");
+  playing = true; // playing again
+  // hidden dice
+  dice.classList.add("hidden");
+};
+init();
 
 // switch player
 const switchPlayer = function () {
@@ -73,7 +91,7 @@ btnHold.addEventListener("click", function () {
     document.querySelector(`#score--${activePlayer}`).textContent =
       score[activePlayer];
     // 2. Check if player's score is >= 100
-    if (score[activePlayer] >= 20) {
+    if (score[activePlayer] >= 100) {
       // if have player wins then not lick any more
       playing = false;
       dice.classList.add("hidden");
@@ -89,31 +107,4 @@ btnHold.addEventListener("click", function () {
 });
 
 /* restart the game */
-btnNew.addEventListener("click", function () {
-  //clear all total scores (both player)
-  console.log(activePlayer);
-  score0El.textContent = 0;
-  score1El.textContent = 0;
-
-  // clear all current scores (both player)
-  // reset all score in behind the sence
-  score[0] = 0;
-  score[1] = 0;
-  currentScore0El.textContent = score[0];
-  currentScore1El.textContent = score[0];
-  // set to default active player (player 1)
-  currentScore = 0;
-  activePlayer = 0;
-  player0El.classList.add("player--active");
-  player1El.classList.remove("player--active");
-  document.querySelector(`#current--${activePlayer}`).textContent =
-    currentScore;
-
-  // remove player winner style (both => player 1 and 2)
-  player0El.classList.remove("player--winner");
-  player1El.classList.remove("player--winner");
-  playing = true; // playing again
-
-  // hidden dice
-  dice.classList.add("hidden");
-});
+btnNew.addEventListener("click", init);
